@@ -59,11 +59,11 @@ button:hover{
     cursor:grab;
 }
 
-.card{
+.card, .formcard{
     background-color: rgb(241, 235, 235, 0.3);
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
-    margin: 20px;
+    margin: 10px;
     font-size: 20px;
     font-weight: 600;
     color: rgb(95, 35, 35);
@@ -83,7 +83,7 @@ form{
 
 form>div{
     display: flex;
-    gap:35px;
+    gap:20px;
 }
 
 input{
@@ -95,14 +95,19 @@ input{
 
 .card button{
     font-size: 18px;
-    padding: 4px 8px;
+    padding: 0px;
+    border: none;
     width:85px;
     height:35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card button img{
-    height:20px;
+    height:22px;
     width:auto;
+    padding: 6px 31px;
 } 
 
 .card>div{
