@@ -59,6 +59,10 @@ button:hover{
     cursor:grab;
 }
 
+button:active{
+    transform: translateY(3px);
+    }
+
 .card, .formcard{
     background-color: rgb(241, 235, 235, 0.3);
     padding: 10px;
@@ -69,8 +73,12 @@ button:hover{
     color: rgb(95, 35, 35);
     text-align: center;
     width:200px;
-    height:200px;
+    height:230px;
     }
+
+.card>div{
+    margin-top: 10px;
+}
 
 form{
     display: flex;
@@ -93,7 +101,17 @@ input{
     font-size: 18px;
 }
 
-.card button{
+select{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 24px;
+    width: 120px;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.card button, form button{
     font-size: 18px;
     padding: 0px;
     border: none;
@@ -113,4 +131,19 @@ input{
 .card>div{
     display: flex;
     justify-content: space-between;
+}
+
+.read{
+    background-color: rgb(26, 77, 26);
+    content: "Read";
+}
+
+.notRead{
+    background-color:  rgb(121, 42, 42);
+    content: "Not read";
+}
+
+.bookImg{
+    height:30px;
+    width:auto;
 }

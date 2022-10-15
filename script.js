@@ -23,20 +23,39 @@ function displayBook(BookObject){
 
         const bookDiv=document.createElement('div');
         bookDiv.classList.add('card');
-        bookDiv.setAttribute('data', `${myLibrary.indexOf(BookObject)}`);
-        
+        bookDiv.setAttribute('data-id', `${myLibrary.indexOf(BookObject)}`);
+                
         const main=document.querySelector('.main');
         main.appendChild(bookDiv);
 
         bookDiv.appendChild(newBookTitle);
         bookDiv.appendChild(newAuthor);
         bookDiv.appendChild(newPages);
+        
+        const readOrNot=document.createElement('button');
+        readOrNot.setAttribute('class','readStatus');
+        readOrNot.setAttribute('id', `${myLibrary.indexOf(BookObject)}`);
+        readOrNot.addEventListener('click', e => changeStatus(e.target.className, e.target.id))
+
+        const bookImg=document.createElement('img');
+        bookImg.classList.add('bookImg');
+        bookImg.setAttribute('data-id',`${myLibrary.indexOf(BookObject)}`);
+                        
+        if (BookObject.readit === 'true') 
+            {readOrNot.classList.add('read');
+            readOrNot.textContent="Read"
+            bookImg.setAttribute('src','images/opened-book.png')}
+            
+            else {readOrNot.classList.add('notRead');
+                readOrNot.textContent="Not read";
+                bookImg.setAttribute('src','images/book.png');}
+
+        
+        bookDiv.appendChild(bookImg);
 
         const lastLineDiv=document.createElement('div');
         bookDiv.appendChild(lastLineDiv);
 
-        const readOrNot=document.createElement('button');
-        readOrNot.textContent="Read";
         lastLineDiv.appendChild(readOrNot);
 
         const removeBookButton=document.createElement('button');
@@ -53,6 +72,27 @@ function displayBook(BookObject){
 
         removeBookButton.addEventListener('click', e => removingBook(e.target.id));
     }
+
+//changes the status of the book
+function changeStatus(status, index){
+    const readOrNot=document.getElementById(`${index}`);
+    const bookImg=document.querySelector(`[data-id='${index}']>img`);
+
+    if (status =='readStatus read') {
+        myLibrary[index].readit='false';
+        readOrNot.textContent="Not read";
+        readOrNot.classList.remove('read');
+        readOrNot.classList.add('notRead');
+        bookImg.setAttribute('src','images/book.png');
+    }
+    else {
+        myLibrary[index].readit='true';
+        readOrNot.textContent="Read";
+        readOrNot.classList.remove('notRead');
+        readOrNot.classList.add('read');
+        bookImg.setAttribute('src','images/opened-book.png');
+    }
+}
 
 //display all the books in the library on screen
 for(let i=0; i<myLibrary.length; i++){
@@ -90,19 +130,44 @@ function addBookForm(){
     pagesInput.setAttribute('required', 'true');
     form.appendChild(pagesInput);
 
-    const readItDiv=document.createElement('div');
-    form.appendChild(readItDiv);
+    const readOrNotLabel=document.createElement('label');
+    readOrNotLabel.textContent="Status:";
+    readOrNotLabel.setAttribute('for', 'status');
+    
+    const readOrNotInput=document.createElement('select');
+    readOrNotInput.setAttribute('name','status');
+    readOrNotInput.setAttribute('id', 'status');
+
+        
+    const readOption=document.createElement('option');
+    readOption.textContent="Read";
+    readOption.setAttribute('value', 'true');
+    readOrNotInput.appendChild(readOption);
+
+    const notReadOption=document.createElement('option');
+    notReadOption.textContent="Not read";
+    notReadOption.setAttribute('value', 'false');
+    readOrNotInput.appendChild(notReadOption);
+
+    const readOrNotDiv=document.createElement('div');
+    readOrNotDiv.classList.add('readOrNot');
+    form.appendChild(readOrNotDiv);
+    readOrNotDiv.appendChild(readOrNotLabel);
+    readOrNotDiv.appendChild(readOrNotInput);
+
+    const lastLineDiv=document.createElement('div');
+    form.appendChild(lastLineDiv);
 
     const cancelEntry=document.createElement('button');
     cancelEntry.textContent="Cancel";
     cancelEntry.setAttribute('type', 'button');
-    readItDiv.appendChild(cancelEntry);
+    lastLineDiv.appendChild(cancelEntry);
 
     const addBookButton=document.createElement('button');
     addBookButton.textContent='Add';
     addBookButton.classList.add('addBookBtn');
     addBookButton.setAttribute('type', 'button');
-    readItDiv.appendChild(addBookButton);
+    lastLineDiv.appendChild(addBookButton);
 
     const main=document.querySelector('.main');
     main.appendChild(bookForm);
@@ -121,12 +186,13 @@ function addBookToLibrary(){
     const bookTitle=document.getElementById('bookTitle').value;
     const author=document.getElementById('author').value;
     const pages=document.getElementById('pages').value;
+    const readit=document.getElementById('status').value;
     if ((bookTitle != [])&&(author != [])&&(pages !=[])){
-        myLibrary.push(new Book(bookTitle,author,pages, true));
+        myLibrary.push(new Book(bookTitle,author,pages, readit));
         displayBook(myLibrary[myLibrary.length-1]);
     }
         else alert('Incomplete values');
-}
+    }
 
 //removes the add book form from the screen
 function removeForm(){
@@ -139,20 +205,19 @@ function removeForm(){
 function removingBook(indexToRemove){
     let isExecuted=confirm("Are you sure you want to delete this entry?");
         if (isExecuted){
-            const bookToRemove=document.querySelector(`[data='${indexToRemove}']`);
-            console.log(bookToRemove);
+            const bookToRemove=document.querySelector(`[data-id='${indexToRemove}']`);
             const main=document.querySelector('.main');
             main.removeChild(bookToRemove);
 
             for (let i=parseInt(indexToRemove)+1; i<myLibrary.length; i++){
-                const bookDiv=document.querySelector(`[data='${i}']`);
-                bookDiv.setAttribute('data', `${i-1}`);
+                const bookDiv=document.querySelector(`[data-id='${i}']`);
+                bookDiv.setAttribute('data-id', `${i-1}`);
 
                 const deleteImg=document.getElementById(i);
                 deleteImg.removeAttribute('id');
                 deleteImg.setAttribute('id', `${i-1}`);
             }
-
             myLibrary.splice(indexToRemove,1);
         }
 }
+
