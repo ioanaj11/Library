@@ -2,36 +2,29 @@
 let myLibrary=[new Book('Outlander', 'Diana Gabaldon', '1412', 'true'), 
                 new Book('Robinson Crusoe', 'Daniel Defoe', '342', 'false')];
 
-//the Book prototype
-function Book(title,author,pages,readit){
+//the Book constructor
+function Book(title,author,pages, readit){
     this.title=title;
     this.author=author;
-    this.pages=pages;
+    this.pages=`${pages} pages`;
     this.readit=readit;
 }
 
 //function which displays the Books on the screen
 function displayBook(BookObject){
-        const newBookTitle=document.createElement('p');
-        newBookTitle.textContent=`${BookObject.title}`;
-
-        const newAuthor=document.createElement('p');
-        newAuthor.textContent=`${BookObject.author}`;
-
-        const newPages=document.createElement('p');
-        newPages.textContent=`${BookObject.pages} pages`;
-
         const bookDiv=document.createElement('div');
         bookDiv.classList.add('card');
         bookDiv.setAttribute('data-id', `${myLibrary.indexOf(BookObject)}`);
                 
+        for (let i=0; i<Object.keys(BookObject).length-1;i++){
+            const display=document.createElement('p');
+            display.textContent=`${BookObject[Object.keys(BookObject)[i]]}`;
+            bookDiv.appendChild(display);
+        }
+
         const main=document.querySelector('.main');
         main.appendChild(bookDiv);
 
-        bookDiv.appendChild(newBookTitle);
-        bookDiv.appendChild(newAuthor);
-        bookDiv.appendChild(newPages);
-        
         const readOrNot=document.createElement('button');
         readOrNot.setAttribute('class','readStatus');
         readOrNot.setAttribute('id', `${myLibrary.indexOf(BookObject)}`);
@@ -40,7 +33,7 @@ function displayBook(BookObject){
         const bookImg=document.createElement('img');
         bookImg.classList.add('bookImg');
         bookImg.setAttribute('data-id',`${myLibrary.indexOf(BookObject)}`);
-                        
+             
         if (BookObject.readit === 'true') 
             {readOrNot.classList.add('read');
             readOrNot.textContent="Read"
@@ -97,7 +90,7 @@ function changeStatus(status, index){
 //display all the books in the library on screen
 for(let i=0; i<myLibrary.length; i++){
     displayBook(myLibrary[i]);
-}
+    }
 
 //the + New book button
 const addNewBook=document.querySelector('.addBook');
@@ -114,20 +107,17 @@ function addBookForm(){
     const titleInput=document.createElement('input');
     titleInput.setAttribute('placeholder', 'Book title*');
     titleInput.setAttribute('id', 'bookTitle');
-    titleInput.setAttribute('required', 'true');
     form.appendChild(titleInput);
 
     const authorInput=document.createElement('input');
     authorInput.setAttribute('placeholder', 'Author*');
     authorInput.setAttribute('id', 'author');
-    authorInput.setAttribute('required', 'true');
     form.appendChild(authorInput);
 
     const pagesInput=document.createElement('input');
     pagesInput.setAttribute('placeholder', 'No.of pages*');
     pagesInput.setAttribute('type', 'number');
     pagesInput.setAttribute('id', 'pages');
-    pagesInput.setAttribute('required', 'true');
     form.appendChild(pagesInput);
 
     const readOrNotLabel=document.createElement('label');
@@ -138,7 +128,6 @@ function addBookForm(){
     readOrNotInput.setAttribute('name','status');
     readOrNotInput.setAttribute('id', 'status');
 
-        
     const readOption=document.createElement('option');
     readOption.textContent="Read";
     readOption.setAttribute('value', 'true');
