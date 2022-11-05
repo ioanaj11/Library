@@ -1,14 +1,17 @@
-//the array which holds all the Book entries
-let myLibrary=[new Book('Outlander', 'Diana Gabaldon', '1412', 'true'), 
-                new Book('Robinson Crusoe', 'Daniel Defoe', '342', 'false')];
-
-//the Book constructor
-function Book(title,author,pages, readit){
+//the Book class
+class Book{
+    constructor(title,author,pages, readit)
+        {
     this.title=title;
     this.author=author;
     this.pages=`${pages} pages`;
     this.readit=readit;
 }
+    }
+
+//the array which holds all the Book entries
+let myLibrary=[new Book('Outlander', 'Diana Gabaldon', '1412', 'true'), 
+                new Book('Robinson Crusoe', 'Daniel Defoe', '342', 'false')];
 
 //function which displays the Books on the screen
 function displayBook(BookObject){
@@ -58,6 +61,7 @@ function displayBook(BookObject){
         trashBinImg.setAttribute('src','images/bin.png');
         trashBinImg.setAttribute('alt','trash bin icon');
         trashBinImg.setAttribute('id', `${myLibrary.indexOf(BookObject)}`);
+        trashBinImg.setAttribute('class', 'trashBinImg');
                 
         removeBookButton.appendChild(trashBinImg);
 
@@ -179,6 +183,7 @@ function addBookToLibrary(){
     if ((bookTitle != [])&&(author != [])&&(pages !=[])){
         myLibrary.push(new Book(bookTitle,author,pages, readit));
         displayBook(myLibrary[myLibrary.length-1]);
+        console.log(myLibrary);
     }
         else alert('Incomplete values');
     }
@@ -202,9 +207,14 @@ function removingBook(indexToRemove){
                 const bookDiv=document.querySelector(`[data-id='${i}']`);
                 bookDiv.setAttribute('data-id', `${i-1}`);
 
-                const deleteImg=document.getElementById(i);
-                deleteImg.removeAttribute('id');
+                const deleteImg=bookDiv.querySelector('.trashBinImg');
                 deleteImg.setAttribute('id', `${i-1}`);
+
+                const bookImg=bookDiv.querySelector('.bookImg');
+                bookImg.setAttribute('data-id', `${i-1}`);
+
+                const readStatusBtn=bookDiv.querySelector('.readStatus');
+                readStatusBtn.setAttribute('id', `${i-1}`);
             }
             myLibrary.splice(indexToRemove,1);
         }
