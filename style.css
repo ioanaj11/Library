@@ -99,8 +99,17 @@ input{
     width: 150px;
     border-radius: 5px;
     font-size: 18px;
-}
+    }
 
+input:invalid {
+    border-color: #900;
+    background-color: #fdd;
+  }
+  
+input:focus:invalid {
+    outline: none;
+  }
+  
 select{
     display: flex;
     justify-content: center;

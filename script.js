@@ -10,8 +10,8 @@ class Book{
     }
 
 //the array which holds all the Book entries
-let myLibrary=[new Book('Outlander', 'Diana Gabaldon', '1412', 'true'), 
-                new Book('Robinson Crusoe', 'Daniel Defoe', '342', 'false')];
+let myLibrary=JSON.parse(localStorage.getItem('books'));
+if (myLibrary ===null) myLibrary=[];
 
 //function which displays the Books on the screen
 function displayBook(BookObject){
@@ -45,7 +45,6 @@ function displayBook(BookObject){
             else {readOrNot.classList.add('notRead');
                 readOrNot.textContent="Not read";
                 bookImg.setAttribute('src','images/book.png');}
-
         
         bookDiv.appendChild(bookImg);
 
@@ -81,6 +80,8 @@ function changeStatus(status, index){
         readOrNot.classList.remove('read');
         readOrNot.classList.add('notRead');
         bookImg.setAttribute('src','images/book.png');
+        localStorage.removeItem("books");
+        localStorage.setItem("books", JSON.stringify(myLibrary));
     }
     else {
         myLibrary[index].readit='true';
@@ -88,6 +89,8 @@ function changeStatus(status, index){
         readOrNot.classList.remove('notRead');
         readOrNot.classList.add('read');
         bookImg.setAttribute('src','images/opened-book.png');
+        localStorage.removeItem("books");
+        localStorage.setItem("books", JSON.stringify(myLibrary));
     }
 }
 
@@ -111,17 +114,21 @@ function addBookForm(){
     const titleInput=document.createElement('input');
     titleInput.setAttribute('placeholder', 'Book title*');
     titleInput.setAttribute('id', 'bookTitle');
+    titleInput.setAttribute('required', "true");
     form.appendChild(titleInput);
 
     const authorInput=document.createElement('input');
     authorInput.setAttribute('placeholder', 'Author*');
     authorInput.setAttribute('id', 'author');
+    authorInput.setAttribute('required', "true");
     form.appendChild(authorInput);
 
     const pagesInput=document.createElement('input');
     pagesInput.setAttribute('placeholder', 'No.of pages*');
     pagesInput.setAttribute('type', 'number');
     pagesInput.setAttribute('id', 'pages');
+    pagesInput.setAttribute('required', "true");
+    pagesInput.setAttribute('min', '1');
     form.appendChild(pagesInput);
 
     const readOrNotLabel=document.createElement('label');
@@ -168,7 +175,7 @@ function addBookForm(){
     //the add book button on the form
     addBookButton.addEventListener('click', ()=> {
         addBookToLibrary();
-        removeForm();})
+        })
 
     //the cancel entry button on the form
     cancelEntry.addEventListener('click', ()=>removeForm());
@@ -176,16 +183,25 @@ function addBookForm(){
 
 //the function which creates a new Book entry, once the Add book button is selected
 function addBookToLibrary(){
-    const bookTitle=document.getElementById('bookTitle').value;
-    const author=document.getElementById('author').value;
-    const pages=document.getElementById('pages').value;
+    const bookTitle=document.getElementById('bookTitle');
+    const author=document.getElementById('author');
+    const pages=document.getElementById('pages');
     const readit=document.getElementById('status').value;
-    if ((bookTitle != [])&&(author != [])&&(pages !=[])){
-        myLibrary.push(new Book(bookTitle,author,pages, readit));
-        displayBook(myLibrary[myLibrary.length-1]);
-        console.log(myLibrary);
-    }
-        else alert('Incomplete values');
+    
+    if (bookTitle.validity.valid)
+        if (author.validity.valid)
+            {if (pages.validity.valid)
+                {
+                    myLibrary.push(new Book(bookTitle.value,author.value,pages.value, readit));
+                    displayBook(myLibrary[myLibrary.length-1]);
+                    localStorage.removeItem("books");
+                    localStorage.setItem("books", JSON.stringify(myLibrary));
+                    removeForm();
+                 }
+                 else alert ('Please provide the number of pages')}
+            
+        else alert('Please provide the name of the author');
+        else alert('Please provide the book title');
     }
 
 //removes the add book form from the screen
@@ -217,6 +233,8 @@ function removingBook(indexToRemove){
                 readStatusBtn.setAttribute('id', `${i-1}`);
             }
             myLibrary.splice(indexToRemove,1);
+            localStorage.removeItem("books");
+            localStorage.setItem("books", JSON.stringify(myLibrary));
         }
 }
 
